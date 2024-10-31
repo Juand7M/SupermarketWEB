@@ -21,7 +21,7 @@ namespace SupermarketWEB.Pages.Categories
 
         [BindProperty]
 
-        public Category Category { get; set; } = default;
+        public Category Category { get; set; } = default!;
 
         public async Task<IActionResult> OnPostAsync()
         {
