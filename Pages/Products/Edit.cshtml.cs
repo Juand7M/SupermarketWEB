@@ -1,11 +1,14 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SupermarketWEB.Data;
 using SupermarketWEB.Models;
 
 namespace SupermarketWEB.Pages.Products
 {
+	[Authorize]
 	public class EditModel : PageModel
 	{
 		private readonly SupermarketContext _context;
@@ -17,9 +20,12 @@ namespace SupermarketWEB.Pages.Products
 
 		[BindProperty]
 		public Product Product { get; set; } = default!;
+		public SelectList Categories { get; set; } = default!;
 
 		public async Task<IActionResult> OnGetAsync(int? id)
 		{
+			Categories = new SelectList(await _context.Categories.ToListAsync(), "Id", "Name");
+
 			if (id == null || _context.Products == null)
 			{
 				return NotFound();
@@ -30,16 +36,18 @@ namespace SupermarketWEB.Pages.Products
 			{
 				return NotFound();
 			}
+
 			Product = product;
 			return Page();
 		}
 
-		public async Task<IActionResult> OnPostAsync()
+		public async Task<IActionResult> OnPostAsync(int? id)
 		{
 			if (!ModelState.IsValid)
 			{
 				return Page();
 			}
+
 			_context.Attach(Product).State = EntityState.Modified;
 
 			try
@@ -59,6 +67,7 @@ namespace SupermarketWEB.Pages.Products
 			}
 			return RedirectToPage("./Index");
 		}
+
 		private bool ProductExists(int id)
 		{
 			return (_context.Products?.Any(e => e.Id == id)).GetValueOrDefault();

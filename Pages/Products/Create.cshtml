@@ -33,7 +33,9 @@
 
 			<div class="form-group">
 				<label asp-for="Product.CategoryId" class="control-label"></label>
-				<input asp-for="Product.CategoryId" class="form-control" />
+				<select asp-for="Product.CategoryId" class="form-control" asp-items="Model.Categories">
+					<option value="" disabled selected>Seleccione</option>
+				</select>
 				<span asp-validation-for="Product.CategoryId" class="text-danger"></span>
 			</div>
 
